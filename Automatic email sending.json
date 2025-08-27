@@ -1,0 +1,170 @@
+{
+  "name": "Automatic email sending",
+  "nodes": [
+    {
+      "parameters": {
+        "sendTo": "={{ $('On form submission').item.json['email '] }}",
+        "subject": "Re: Onboarding email",
+        "emailType": "text",
+        "message": "={{ $json.text }}",
+        "options": {
+          "appendAttribution": false
+        }
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.1,
+      "position": [
+        512,
+        -64
+      ],
+      "id": "68068fef-6446-4805-b5ac-348add0968a0",
+      "name": "Send a message",
+      "webhookId": "e61ed545-eb8a-4fc4-9b0a-a7ebaf704bdf",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "ZnSiBDaNFB7CIWCJ",
+          "name": "Gmail account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "formTitle": "Onboarding to quick cargos",
+        "formDescription": "hello please submit this form. Thanks",
+        "formFields": {
+          "values": [
+            {
+              "fieldLabel": "Name",
+              "placeholder": "Muhammad Saqlain",
+              "requiredField": true
+            },
+            {
+              "fieldLabel": "email ",
+              "fieldType": "email",
+              "placeholder": "abc@gmail.com",
+              "requiredField": true
+            },
+            {
+              "fieldLabel": "Phone Number",
+              "fieldType": "number",
+              "placeholder": "7874546",
+              "requiredField": true
+            },
+            {
+              "fieldLabel": "Desciption",
+              "placeholder": "I am runing Logistics Company in US and I wanted to automate some parts of my work.",
+              "requiredField": true
+            },
+            {
+              "fieldLabel": "Industry",
+              "placeholder": "IT",
+              "requiredField": true
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.formTrigger",
+      "typeVersion": 2.2,
+      "position": [
+        -304,
+        -64
+      ],
+      "id": "74a8341c-f8b0-42aa-a232-0dafef65ecfe",
+      "name": "On form submission",
+      "webhookId": "17d582ae-d088-4b69-8c84-fea9b90c9c3f"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=",
+        "messages": {
+          "messageValues": [
+            {
+              "message": "Hello behave as a polite and intelligent email composer."
+            },
+            {
+              "type": "HumanMessagePromptTemplate",
+              "message": "=Hello I wanted you to compose an email with the given below by modifying the words also:   \n\n\n{{ $json.Name }} \n{{ $json['email '] }} \n{{ $json['email '] }}\n{{ $json['Phone Number'] }}\n{{ $json.Desciption }}\n{{ $json.Industry }}\n\n\n\"\" \n\nDo not Include the subject line\nEmail Tamplate:   \n\nHi {Name}, \n\nHope you are doing well. Thanks for submitting the query. I saw you are doing in {Industry}. I would be happy to schedule a meeting for discussion.\n\n\nRegards,\nMuhammad Saqlain"
+            }
+          ]
+        },
+        "batching": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.chainLlm",
+      "typeVersion": 1.7,
+      "position": [
+        48,
+        -64
+      ],
+      "id": "4bc50d3d-7ac2-4e8f-b54e-b15a0eacc8d3",
+      "name": "Basic LLM Chain"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+      "typeVersion": 1,
+      "position": [
+        -64,
+        144
+      ],
+      "id": "e74428d5-ed48-4c48-9ecf-ee2d931e42d0",
+      "name": "Google Gemini Chat Model",
+      "credentials": {
+        "googlePalmApi": {
+          "id": "2IsEb5MQ24gDMhiD",
+          "name": "Google Gemini(PaLM) Api account"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "On form submission": {
+      "main": [
+        [
+          {
+            "node": "Basic LLM Chain",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Gemini Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Basic LLM Chain",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Basic LLM Chain": {
+      "main": [
+        [
+          {
+            "node": "Send a message",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "b92ba8fd-315d-4a8f-a5fa-090e646e7452",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "eb342144c5158b72c45d8fb40fdb687459e5812fa20a5d85f03de5df60d51bb4"
+  },
+  "id": "sZ7W7Lr5jBWxngyu",
+  "tags": []
+}
